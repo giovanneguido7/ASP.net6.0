@@ -1,47 +1,52 @@
-# ASP.net6.0
+import React, { useState, useEffect } from 'react';
 
-import React from 'react';
+const Tabela = () => {
+  const [dados, setDados] = useState([]);
+  const [filtro, setFiltro] = useState('');
 
-function VerificarString(props) {
-  const { texto } = props;
+  useEffect(() => {
+    // Faça a requisição à API e atualize os dados com o resultado
+    // Aqui estou usando um mock para simplificar o exemplo
+    const response = [
+      { id: 1, nome: 'João', idade: 25 },
+      { id: 2, nome: 'Maria', idade: 30 },
+      { id: 3, nome: 'Pedro', idade: 35 },
+      { id: 4, nome: 'Ana', idade: 28 },
+    ];
+    setDados(response);
+  }, []);
 
-  // Verifica se a string tem 10 números
-  const verificarString = (str) => {
-    const regex = /\d/g; // Expressão regular para verificar números
-    const numeros = str.match(regex); // Filtra os números da string
-
-    if (numeros && numeros.length === 10) {
-      return str; // Se já tiver 10 números, retorna a string sem alterações
-    } else if (numeros && numeros.length < 10) {
-      // Se tiver menos de 10 números, acrescenta um 0 no início
-      const zerosFaltantes = 10 - numeros.length;
-      const zeros = Array(zerosFaltantes).fill(0).join(''); // Cria uma string com os zeros
-      return `${zeros}${str}`;
-    }
+  const handleInputChange = (e) => {
+    setFiltro(e.target.value);
   };
 
+  const dadosFiltrados = dados.filter((item) =>
+    item.nome.toLowerCase().includes(filtro.toLowerCase())
+  );
+
   return (
     <div>
-      <p>Texto original: {texto}</p>
-      <p>Texto modificado: {verificarString(texto)}</p>
+      <input type="text" onChange={handleInputChange} value={filtro} />
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Idade</th>
+          </tr>
+        </thead>
+        <tbody>
+          {dadosFiltrados.map((item) => (
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td>{item.nome}</td>
+              <td>{item.idade}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
-}
+};
 
-export default VerificarString;
-
-
-
-
-import React from 'react';
-import VerificarString from './VerificarString';
-
-function App() {
-  return (
-    <div>
-      <VerificarString texto="1234567890" />
-    </div>
-  );
-}
-
-export default App;
+export default Tabela;
